@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -29,6 +30,7 @@ describe('UsersService', () => {
   describe('create', () => {
     it('should create a user', async () => {
       const userData: Prisma.UserCreateInput = {
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: 'password',
@@ -36,11 +38,7 @@ describe('UsersService', () => {
 
       const createdUser = await service.create(userData);
 
-      expect(createdUser).toMatchObject({
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
-      });
+      expect(createdUser).toMatchObject(userData);
     });
   });
 
@@ -48,11 +46,13 @@ describe('UsersService', () => {
     it('should return all users', async () => {
       const userData: Prisma.UserCreateInput[] = [
         {
+          id: uuidv4(),
           email: 'test1@example.com',
           name: 'Test User 1',
           password: 'password',
         },
         {
+          id: uuidv4(),
           email: 'test2@example.com',
           name: 'Test User 2',
           password: 'password',
@@ -64,22 +64,15 @@ describe('UsersService', () => {
       const users = await service.findAll({});
 
       expect(users).toHaveLength(2);
-      expect(users[0]).toMatchObject({
-        email: 'test1@example.com',
-        name: 'Test User 1',
-        password: 'password',
-      });
-      expect(users[1]).toMatchObject({
-        email: 'test2@example.com',
-        name: 'Test User 2',
-        password: 'password',
-      });
+      expect(users[0]).toMatchObject(userData[0]);
+      expect(users[1]).toMatchObject(userData[1]);
     });
   });
 
   describe('findOne', () => {
     it('should return a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: 'password',
@@ -89,40 +82,34 @@ describe('UsersService', () => {
 
       const foundUser = await service.findOne({ id: createdUser.id });
 
-      expect(foundUser).toMatchObject({
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
-      });
+      expect(foundUser).toMatchObject(userData);
     });
   });
 
   describe('update', () => {
     it('should update a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: 'password',
       };
 
       const createdUser = await prismaService.user.create({ data: userData });
-
-      const updatedUser = await service.update({
+      const returnedUser = await service.update({
         where: { id: createdUser.id },
         data: { name: 'Updated User' },
       });
-
-      expect(updatedUser).toMatchObject({
-        email: 'test@example.com',
-        name: 'Updated User',
-        password: 'password',
-      });
+      const modifiedUser = userData;
+      modifiedUser.name = 'Updated User';
+      expect(returnedUser).toMatchObject(modifiedUser);
     });
   });
 
   describe('remove', () => {
     it('should remove a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: 'password',
@@ -132,11 +119,7 @@ describe('UsersService', () => {
 
       const removedUser = await service.remove({ id: createdUser.id });
 
-      expect(removedUser).toMatchObject({
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
-      });
+      expect(removedUser).toMatchObject(userData);
 
       const foundUser = await prismaService.user.findUnique({
         where: { id: createdUser.id },

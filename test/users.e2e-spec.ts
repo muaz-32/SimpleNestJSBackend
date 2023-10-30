@@ -4,6 +4,7 @@ import { UsersModule } from '../src/users/users.module';
 import { UsersService } from '../src/users/users.service';
 import { INestApplication } from '@nestjs/common';
 import { PrismaService } from '../src/prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('Users', () => {
   let app: INestApplication;
@@ -29,13 +30,13 @@ describe('Users', () => {
     it('should return an array of users', async () => {
       const users = [
         {
-          id: '1',
+          id: uuidv4(),
           email: 'a@gmail.com',
           name: 'A',
           password: '123',
         },
         {
-          id: '2',
+          id: uuidv4(),
           email: 'b@gmail.com',
           name: 'B',
           password: '1234',
@@ -54,7 +55,7 @@ describe('Users', () => {
   describe('POST /users', () => {
     it('should return a user', () => {
       const user = {
-        id: '1',
+        id: uuidv4(),
         email: 'test@gmail.com',
         name: 'Test User',
         password: 'password',
@@ -71,13 +72,13 @@ describe('Users', () => {
     it('should return a user by id', async () => {
       const users = [
         {
-          id: '1',
+          id: uuidv4(),
           email: 'a@gmail.com',
           name: 'A',
           password: '123',
         },
         {
-          id: '2',
+          id: uuidv4(),
           email: 'b@gmail.com',
           name: 'B',
           password: '1234',
@@ -87,7 +88,7 @@ describe('Users', () => {
         await usersService.create(user);
       }
       return request(app.getHttpServer())
-        .get('/users/1')
+        .get('/users/' + users[0].id)
         .expect(200)
         .expect(users[0]);
     });
@@ -97,13 +98,13 @@ describe('Users', () => {
     it('should return a user by id', async () => {
       const users = [
         {
-          id: '1',
+          id: uuidv4(),
           email: 'a@gmail.com',
           name: 'A',
           password: '123',
         },
         {
-          id: '2',
+          id: uuidv4(),
           email: 'b@gmail.com',
           name: 'B',
           password: '1234',
@@ -112,16 +113,15 @@ describe('Users', () => {
       for (const user of users) {
         await usersService.create(user);
       }
+      const modifiedUser = users[0];
+      modifiedUser.name = 'Updated User';
       return request(app.getHttpServer())
-        .patch('/users/1')
+        .patch('/users/' + users[0].id)
         .send({
           name: 'Updated User',
         })
         .expect(200)
-        .expect({
-          ...users[0],
-          name: 'Updated User',
-        });
+        .expect(modifiedUser);
     });
   });
 
@@ -129,13 +129,13 @@ describe('Users', () => {
     it('should return a user by id', async () => {
       const users = [
         {
-          id: '1',
+          id: uuidv4(),
           email: 'a@gmail.com',
           name: 'A',
           password: '123',
         },
         {
-          id: '2',
+          id: uuidv4(),
           email: 'b@gmail.com',
           name: 'B',
           password: '1234',
@@ -145,7 +145,7 @@ describe('Users', () => {
         await usersService.create(user);
       }
       return request(app.getHttpServer())
-        .delete('/users/1')
+        .delete('/users/' + users[0].id)
         .expect(200)
         .expect(users[0]);
     });

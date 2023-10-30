@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { v4 as uuidv4 } from 'uuid';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -22,21 +23,17 @@ describe('UsersController', () => {
   describe('create', () => {
     it('should create a user', async () => {
       const userData: CreateUserDto = {
-        id: '1',
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: 'password',
       };
 
-      const createdUser = {
-        ...userData,
-      };
-
-      jest.spyOn(service, 'create').mockResolvedValue(createdUser);
+      jest.spyOn(service, 'create').mockResolvedValue(userData);
 
       const result = await controller.create(userData);
 
-      expect(result).toBe(createdUser);
+      expect(result).toBe(userData);
     });
   });
 
@@ -44,13 +41,13 @@ describe('UsersController', () => {
     it('should return all users', async () => {
       const users = [
         {
-          id: '1',
+          id: uuidv4(),
           email: 'test1@example.com',
           name: 'Test User 1',
           password: '123',
         },
         {
-          id: '2',
+          id: uuidv4(),
           email: 'test2@example.com',
           name: 'Test User 2',
           password: '1234',
@@ -68,7 +65,7 @@ describe('UsersController', () => {
   describe('findOne', () => {
     it('should return a user by id', async () => {
       const user = {
-        id: '1',
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: '123',
@@ -85,7 +82,7 @@ describe('UsersController', () => {
   describe('update', () => {
     it('should update a user by id', async () => {
       const userData = {
-        id: '1',
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test',
         password: '1234',
@@ -94,10 +91,8 @@ describe('UsersController', () => {
       const updateData: UpdateUserDto = {
         name: 'Updated User',
       };
-      const updatedUser = {
-        name: 'Updated User',
-        ...userData,
-      };
+      const updatedUser = userData;
+      updatedUser.name = updateData.name;
 
       jest.spyOn(service, 'update').mockResolvedValue(userData);
 
@@ -110,21 +105,17 @@ describe('UsersController', () => {
   describe('remove', () => {
     it('should remove a user by id', async () => {
       const user = {
-        id: '1',
+        id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
         password: '12345',
-      };
-
-      const removedUser = {
-        ...user,
       };
 
       jest.spyOn(service, 'remove').mockResolvedValue(user);
 
       const result = await controller.remove(user.id);
 
-      expect(result).toStrictEqual(removedUser);
+      expect(result).toStrictEqual(user);
     });
   });
   it('should be defined', () => {
