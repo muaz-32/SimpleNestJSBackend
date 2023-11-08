@@ -8,7 +8,7 @@ describe('UsersService', () => {
   let service: UsersService;
   let prismaService: PrismaService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [UsersService, PrismaService],
     }).compile();
@@ -44,7 +44,7 @@ describe('UsersService', () => {
 
   describe('findAll', () => {
     it('should return all users', async () => {
-      const userData: Prisma.UserCreateInput[] = [
+      const userData: Prisma.UserCreateManyInput[] = [
         {
           id: uuidv4(),
           email: 'test1@example.com',
@@ -64,8 +64,9 @@ describe('UsersService', () => {
       const users = await service.findAll({});
 
       expect(users).toHaveLength(2);
-      expect(users[0]).toMatchObject(userData[0]);
-      expect(users[1]).toMatchObject(userData[1]);
+      for (const user of users) {
+        expect(userData).toContainEqual(user);
+      }
     });
   });
 
@@ -94,15 +95,24 @@ describe('UsersService', () => {
         name: 'Test User',
         password: 'password',
       };
+      const updatedUserData: Prisma.UserUpdateInput = {
+        name: 'Updated User',
+      };
 
       const createdUser = await prismaService.user.create({ data: userData });
-      const returnedUser = await service.update({
+
+      const updatedUser = await service.update({
         where: { id: createdUser.id },
-        data: { name: 'Updated User' },
+        data: updatedUserData,
       });
-      const modifiedUser = userData;
-      modifiedUser.name = 'Updated User';
-      expect(returnedUser).toMatchObject(modifiedUser);
+
+      expect(updatedUser).toMatchObject(updatedUserData);
+
+      const foundUser = await prismaService.user.findUnique({
+        where: { id: createdUser.id },
+      });
+
+      expect(foundUser).toMatchObject(updatedUserData);
     });
   });
 
@@ -117,9 +127,9 @@ describe('UsersService', () => {
 
       const createdUser = await prismaService.user.create({ data: userData });
 
-      const removedUser = await service.remove({ id: createdUser.id });
+      const deletedUser = await service.remove({ id: createdUser.id });
 
-      expect(removedUser).toMatchObject(userData);
+      expect(deletedUser).toMatchObject(createdUser);
 
       const foundUser = await prismaService.user.findUnique({
         where: { id: createdUser.id },

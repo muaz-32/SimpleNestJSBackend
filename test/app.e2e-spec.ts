@@ -15,6 +15,14 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
+  afterEach(async () => {
+    await app.close();
+  });
+
+  afterAll(async () => {
+    jest.resetModules();
+  });
+
   it('/api (GET)', () => {
     return request(app.getHttpServer())
       .get('/api')

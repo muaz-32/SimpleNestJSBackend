@@ -10,7 +10,7 @@ describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
       providers: [UsersService, PrismaService],
@@ -20,13 +20,21 @@ describe('UsersController', () => {
     service = module.get<UsersService>(UsersService);
   });
 
+  afterAll(async () => {
+    jest.resetModules();
+  });
+
+  afterEach(async () => {
+    jest.restoreAllMocks();
+  });
+
   describe('create', () => {
     it('should create a user', async () => {
       const userData: CreateUserDto = {
         id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
-        password: 'password',
+        password: 'a1',
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(userData);
@@ -39,83 +47,86 @@ describe('UsersController', () => {
 
   describe('findAll', () => {
     it('should return all users', async () => {
-      const users = [
+      const userData = [
         {
           id: uuidv4(),
           email: 'test1@example.com',
           name: 'Test User 1',
-          password: '123',
+          password: 'b1',
         },
         {
           id: uuidv4(),
           email: 'test2@example.com',
           name: 'Test User 2',
-          password: '1234',
+          password: 'c1',
         },
       ];
 
-      jest.spyOn(service, 'findAll').mockResolvedValue(users);
+      jest.spyOn(service, 'findAll').mockResolvedValue(userData);
 
       const result = await controller.findAll();
 
-      expect(result).toBe(users);
+      expect(result).toBe(userData);
     });
   });
 
   describe('findOne', () => {
     it('should return a user by id', async () => {
-      const user = {
+      const userData = {
         id: uuidv4(),
         email: 'test@example.com',
-        name: 'Test User',
-        password: '123',
+        name: 'Test User 1',
+        password: 'd1',
       };
 
-      jest.spyOn(service, 'findOne').mockResolvedValue(user);
+      jest.spyOn(service, 'findOne').mockResolvedValue(userData);
 
-      const result = await controller.findOne(user.id);
+      const result = await controller.findOne(userData.id);
 
-      expect(result).toBe(user);
+      expect(result).toBe(userData);
     });
   });
 
   describe('update', () => {
-    it('should update a user by id', async () => {
+    it('should update a user', async () => {
       const userData = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test',
-        password: '1234',
+        email: 'a@gmai.com',
+        name: 'Test User',
+        password: 'e1',
       };
-
-      const updateData: UpdateUserDto = {
+      const updatedUserData: UpdateUserDto = {
         name: 'Updated User',
       };
-      const updatedUser = userData;
-      updatedUser.name = updateData.name;
+      const mockedValue = {
+        id: userData.id,
+        email: userData.email,
+        name: updatedUserData.name,
+        password: userData.password,
+      };
 
-      jest.spyOn(service, 'update').mockResolvedValue(userData);
+      jest.spyOn(service, 'update').mockResolvedValue(mockedValue);
 
-      const result = await controller.update(userData.id, updateData);
+      const result = await controller.update(userData.id, updatedUserData);
 
-      expect(result).toStrictEqual(updatedUser);
+      expect(result).toMatchObject(mockedValue);
     });
   });
 
   describe('remove', () => {
     it('should remove a user by id', async () => {
-      const user = {
+      const userData = {
         id: uuidv4(),
         email: 'test@example.com',
         name: 'Test User',
-        password: '12345',
+        password: 'f1',
       };
 
-      jest.spyOn(service, 'remove').mockResolvedValue(user);
+      jest.spyOn(service, 'remove').mockResolvedValue(userData);
 
-      const result = await controller.remove(user.id);
+      const deletedUser = await controller.remove(userData.id);
 
-      expect(result).toStrictEqual(user);
+      expect(deletedUser).toStrictEqual(userData);
     });
   });
   it('should be defined', () => {
