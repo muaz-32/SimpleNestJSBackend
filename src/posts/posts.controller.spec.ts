@@ -3,6 +3,7 @@ import { PostsController } from './posts.controller';
 import { PostsService } from './posts.service';
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
+import { faker } from '@faker-js/faker';
 
 describe('PostsController', () => {
   let controller: PostsController;
@@ -30,8 +31,8 @@ describe('PostsController', () => {
     it('should create a post', async () => {
       const postData = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.words(3),
+        content: faker.lorem.words(10),
         author: {
           connect: {
             id: uuidv4(),
@@ -43,8 +44,8 @@ describe('PostsController', () => {
         id: postData.id,
         title: postData.title,
         content: postData.content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: faker.date.past(),
+        updatedAt: faker.date.recent(),
         authorId: postData.author.connect.id,
       };
 
@@ -61,8 +62,8 @@ describe('PostsController', () => {
       const postData = [
         {
           id: uuidv4(),
-          title: 'Test Post 1',
-          content: 'Test Post Content 1',
+          title: faker.lorem.words(3),
+          content: faker.lorem.words(10),
           authorId: {
             connect: {
               id: uuidv4(),
@@ -71,8 +72,8 @@ describe('PostsController', () => {
         },
         {
           id: uuidv4(),
-          title: 'Test Post 2',
-          content: 'Test Post Content 2',
+          title: faker.lorem.words(3),
+          content: faker.lorem.words(10),
           authorId: {
             connect: {
               id: uuidv4(),
@@ -86,16 +87,16 @@ describe('PostsController', () => {
           id: postData[0].id,
           title: postData[0].title,
           content: postData[0].content,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: faker.date.past(),
+          updatedAt: faker.date.recent(),
           authorId: postData[0].authorId.connect.id,
         },
         {
           id: postData[1].id,
           title: postData[1].title,
           content: postData[1].content,
-          createdAt: new Date(),
-          updatedAt: new Date(),
+          createdAt: faker.date.past(),
+          updatedAt: faker.date.recent(),
           authorId: postData[1].authorId.connect.id,
         },
       ];
@@ -112,8 +113,8 @@ describe('PostsController', () => {
     it('should return a post by id', async () => {
       const postData = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.words(3),
+        content: faker.lorem.words(10),
         authorId: {
           connect: {
             id: uuidv4(),
@@ -125,8 +126,8 @@ describe('PostsController', () => {
         id: postData.id,
         title: postData.title,
         content: postData.content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: faker.date.past(),
+        updatedAt: faker.date.recent(),
         authorId: postData.authorId.connect.id,
       };
 
@@ -142,9 +143,9 @@ describe('PostsController', () => {
     it('should update a post', async () => {
       const postData = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
-        updatedAt: new Date(),
+        title: faker.lorem.words(3),
+        content: faker.lorem.words(10),
+        updatedAt: faker.date.recent(),
         authorId: {
           connect: {
             id: uuidv4(),
@@ -156,7 +157,7 @@ describe('PostsController', () => {
         id: postData.id,
         title: postData.title,
         content: postData.content,
-        createdAt: new Date(),
+        createdAt: faker.date.past(),
         updatedAt: postData.updatedAt,
         authorId: postData.authorId.connect.id,
       };
@@ -173,8 +174,8 @@ describe('PostsController', () => {
     it('should remove a post by id', async () => {
       const postData = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.words(3),
+        content: faker.lorem.words(10),
         authorId: {
           connect: {
             id: uuidv4(),
@@ -186,8 +187,8 @@ describe('PostsController', () => {
         id: postData.id,
         title: postData.title,
         content: postData.content,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: faker.date.past(),
+        updatedAt: faker.date.recent(),
         authorId: postData.authorId.connect.id,
       };
 

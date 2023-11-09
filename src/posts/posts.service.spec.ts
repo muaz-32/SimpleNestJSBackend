@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UsersService } from '../users/users.service';
 import { v4 as uuidv4 } from 'uuid';
 import { Prisma } from '@prisma/client';
+import { faker } from '@faker-js/faker';
 
 describe('PostsService', () => {
   let service: PostsService;
@@ -12,15 +13,15 @@ describe('PostsService', () => {
   const users = [
     {
       id: uuidv4(),
-      email: 'a@gmail.com',
-      name: 'Test User',
-      password: 'password',
+      email: faker.internet.email(),
+      name: faker.person.fullName(),
+      password: faker.internet.password(),
     },
     {
       id: uuidv4(),
-      email: 'b@gmail.com',
-      name: 'Test User',
-      password: 'password',
+      email: faker.internet.email(),
+      name: faker.person.fullName(),
+      password: faker.internet.password(),
     },
   ];
 
@@ -53,8 +54,8 @@ describe('PostsService', () => {
     it('should create a post', async () => {
       const postData: Prisma.PostCreateInput = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
         author: {
           connect: {
             id: users[0].id,
@@ -79,14 +80,14 @@ describe('PostsService', () => {
       const postData: Prisma.PostCreateManyInput[] = [
         {
           id: uuidv4(),
-          title: 'Test Post 1',
-          content: 'Test Post Content 1',
+          title: faker.lorem.sentence(),
+          content: faker.lorem.paragraphs(),
           authorId: users[0].id,
         },
         {
           id: uuidv4(),
-          title: 'Test Post 2',
-          content: 'Test Post Content 2',
+          title: faker.lorem.sentence(),
+          content: faker.lorem.paragraphs(),
           authorId: users[1].id,
         },
       ];
@@ -105,8 +106,8 @@ describe('PostsService', () => {
     it('should return a post by id', async () => {
       const postData: Prisma.PostCreateInput = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
         author: {
           connect: {
             id: users[0].id,
@@ -132,8 +133,8 @@ describe('PostsService', () => {
     it('should update a post', async () => {
       const postData: Prisma.PostCreateInput = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
         author: {
           connect: {
             id: users[0].id,
@@ -141,8 +142,8 @@ describe('PostsService', () => {
         },
       };
       const updatedPostData: Prisma.PostUpdateInput = {
-        title: 'Updated Test Post',
-        content: 'Updated Test Post Content',
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
       };
 
       const createdPost = await prismaService.post.create({ data: postData });
@@ -166,8 +167,8 @@ describe('PostsService', () => {
     it('should remove a post', async () => {
       const postData: Prisma.PostCreateInput = {
         id: uuidv4(),
-        title: 'Test Post',
-        content: 'Test Post Content',
+        title: faker.lorem.sentence(),
+        content: faker.lorem.paragraphs(),
         author: {
           connect: {
             id: users[0].id,

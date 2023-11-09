@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -32,9 +33,9 @@ describe('UsersController', () => {
     it('should create a user', async () => {
       const userData: CreateUserDto = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'a1',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       jest.spyOn(service, 'create').mockResolvedValue(userData);
@@ -50,15 +51,15 @@ describe('UsersController', () => {
       const userData = [
         {
           id: uuidv4(),
-          email: 'test1@example.com',
-          name: 'Test User 1',
-          password: 'b1',
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password(),
         },
         {
           id: uuidv4(),
-          email: 'test2@example.com',
-          name: 'Test User 2',
-          password: 'c1',
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password(),
         },
       ];
 
@@ -74,9 +75,9 @@ describe('UsersController', () => {
     it('should return a user by id', async () => {
       const userData = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User 1',
-        password: 'd1',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       jest.spyOn(service, 'findOne').mockResolvedValue(userData);
@@ -91,12 +92,12 @@ describe('UsersController', () => {
     it('should update a user', async () => {
       const userData = {
         id: uuidv4(),
-        email: 'a@gmai.com',
-        name: 'Test User',
-        password: 'e1',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
       const updatedUserData: UpdateUserDto = {
-        name: 'Updated User',
+        name: faker.person.fullName(),
       };
       const mockedValue = {
         id: userData.id,
@@ -117,9 +118,9 @@ describe('UsersController', () => {
     it('should remove a user by id', async () => {
       const userData = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'f1',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       jest.spyOn(service, 'remove').mockResolvedValue(userData);

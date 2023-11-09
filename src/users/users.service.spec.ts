@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { v4 as uuidv4 } from 'uuid';
+import { faker } from '@faker-js/faker';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -31,9 +32,9 @@ describe('UsersService', () => {
     it('should create a user', async () => {
       const userData: Prisma.UserCreateInput = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       const createdUser = await service.create(userData);
@@ -47,15 +48,15 @@ describe('UsersService', () => {
       const userData: Prisma.UserCreateManyInput[] = [
         {
           id: uuidv4(),
-          email: 'test1@example.com',
-          name: 'Test User 1',
-          password: 'password',
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password(),
         },
         {
           id: uuidv4(),
-          email: 'test2@example.com',
-          name: 'Test User 2',
-          password: 'password',
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          password: faker.internet.password(),
         },
       ];
 
@@ -74,9 +75,9 @@ describe('UsersService', () => {
     it('should return a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       const createdUser = await prismaService.user.create({ data: userData });
@@ -91,12 +92,12 @@ describe('UsersService', () => {
     it('should update a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
       const updatedUserData: Prisma.UserUpdateInput = {
-        name: 'Updated User',
+        name: faker.person.fullName(),
       };
 
       const createdUser = await prismaService.user.create({ data: userData });
@@ -120,9 +121,9 @@ describe('UsersService', () => {
     it('should remove a user by id', async () => {
       const userData: Prisma.UserCreateInput = {
         id: uuidv4(),
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password',
+        email: faker.internet.email(),
+        name: faker.person.fullName(),
+        password: faker.internet.password(),
       };
 
       const createdUser = await prismaService.user.create({ data: userData });
